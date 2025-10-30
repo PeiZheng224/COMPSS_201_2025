@@ -4,8 +4,8 @@ rm(list = ls()) # clear memory
 setwd("/Users/auffhammer/Library/CloudStorage/Dropbox/06_Teaching/MACSS/2025/COMPSS_201_2025/lecture_10")
 #Jupyter Path is
 #setwd("~/COMPSS_201_2025/lecture_10")
-library(ggplot2,lfe)
-set.seed(22092008) # set random number generator seed
+library(pacman)
+p_load(ggplot2,lfe)
 wb <- read.csv("life.csv")
 # Start with a simple OLS regression of Life.Expectancy on Schooling
 mod_1 <- felm(Life.expectancy ~ Schooling, data = wb)

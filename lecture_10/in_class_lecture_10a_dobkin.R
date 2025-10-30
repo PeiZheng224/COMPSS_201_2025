@@ -1,4 +1,4 @@
-# We are going to replicate Carpenter and Dobkin one the effects of minimum drinking age on
+# We are going to replicate Carpenter and Dobkin on the effects of minimum drinking age on
 # mortality - This is the exercise conducted by Philip Leppert. 
 
 rm(list = ls()) # clear memory

@@ -12,8 +12,7 @@ p_load(tidyverse,broom,rdrobust,estimatr,modelsummary)
 # in a free tutoring program and receive assistance throughout the year. 
 # At the end of the school year, students take a final test, 
 # or exit exam (with a maximum of 100 points) to measure how much 
-# they learned overall. Remember, this is a hypothetical example 
-# and tests like this don’t really exist
+# they learned overall. 
 
 tutoring <- read_csv("tutoring_program_fuzzy.csv")
 
@@ -104,4 +103,8 @@ model_fuzzy <- iv_robust(
   data = filter(tutoring_centered, entrance_centered >= -10 & entrance_centered <= 10)
 )
 tidy(model_fuzzy)
+
+rdrobust(y = tutoring$exit_exam, x = tutoring$entrance_exam,
+         c = 70, fuzzy = tutoring$tutoring) %>%
+  summary()
 
