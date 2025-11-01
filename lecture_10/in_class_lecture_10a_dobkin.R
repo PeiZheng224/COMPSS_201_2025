@@ -127,4 +127,5 @@ carpenter_dobkin_2009 %>%
        x = "Age (binned)")+
 theme_classic(base_size = 14)
 
-# Play with this! What happens if you use a third, fourth and fifth order polynomial? With and without the data limitation to 20-22?
+# Play with this! What happens if you use a third, fourth and fifth order polynomial? 
+# With and without the data limitation to 20-22?

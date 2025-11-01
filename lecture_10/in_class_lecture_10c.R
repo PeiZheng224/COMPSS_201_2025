@@ -24,7 +24,7 @@ summary(mod_3)
 
 # Now repeat and run a model with two way fixed effects, but control GDP and Total Health Expenditure What happens? 
 # What happens?
-mod_4 <- felm(Life.expectancy ~ Schooling + GDP + Total.expenditure| Country + Year, data = wb)
+mod_4 <- felm(Life.expectancy ~ Schooling + GDP | Country + Year, data = wb)
 summary(mod_4)
 
 # Take a look at your GDP data? Anything funky?
