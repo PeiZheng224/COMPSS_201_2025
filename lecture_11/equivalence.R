@@ -5,10 +5,8 @@
 ################################################################################
 rm(list = ls()) # clear memory
 # Load necessary libraries
-install.packages(c("tidyverse", "fixest", "haven"))
-library(tidyverse)
-library(fixest)
-library(haven)
+library(pacman)
+p_load(tidyverse, fixest, haven)
 
 # Load the data
 data <- haven::read_dta("https://github.com/scunning1975/mixtape/raw/master/castle.dta")
