@@ -1,0 +1,137 @@
+---
+title: "Problem Set 3 - Answer Key"
+author: "MaCCS 201 - Fall 2025"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls()) # clear memory
+setwd("/Users/auffhammer/Library/CloudStorage/Dropbox/06_Teaching/MACSS/2024/code/private-repository1/Problem Set 3")
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(tidyverse, estimatr, ggplot2, ggthemes,summarytools)
+
+
+```
+## Tentative Due Date: November 8
+### Please submit markdown file named [last_name]_[first_name]_ps1.Rmd or a pdf with all code and answers. 
+
+##Part 1: Blackburn and Neumark (1992)
+
+Let's take a look at the data from Blackburn and Neumark (QJE 1992). 
+ We would like to estimate the model: 
+ 
+\begin{eqnarray}
+\log(wage) &=& \beta_o + exper\cdot\beta_1 +tenure\cdot\beta_2+
+married\cdot\beta_3+ south\cdot\beta_4 + \\ && urban\cdot\beta_5+
+black\cdot\beta_6+ educ\cdot\beta_7 + abil\cdot\gamma +
+\varepsilon \nonumber
+\end{eqnarray}
+
+One of the big problems in the wage literature is that
+we do not observe ability. If ability is not
+correlated with any of the right hand side variables, we can
+include it in the disturbance and nothing is lost by not observing
+it. If, however, it is correlated with one or more of the right
+hand side variables, OLS is no longer unbiased or consistent.
+Assume that ability is correlated with education and none of the
+other right hand side variables. 
+
+a) Derive the bias of $\beta_7$ and
+show what direction the bias goes in depending on whether the
+correlation between ability and education is positive or negative.
+
+### The estimated coefficient on education ($\beta_7$) is given by the OVB formula. If you leave out ability, you will estimate $\beta_7 + \gamma \cdot \delta_1$. $\delta_1$ here is the coefficient of education on ability in the ``weird regression'' from class. We can sign that one. We would think that $\gamma > 0$ as we might think that higher ability (whatever that means) might lead to higher wages (all else equal). We also might think that higher ability might "go with" more years of education. Also positive. Hence the product is positive, and hece the bias is positive!
+
+b)  You showed in the first part that we can derive the sign/direction
+of the bias. One approach that has been take in the literature is
+using a "proxy" variable for the unobservable ability. We will use
+IQ here to proxy for ability. Estimate the model above excluding
+ability, record your parameter estimates, standard errors and
+$R^2$. 
+
+```{r q1b, include=TRUE}
+newburn <- read.csv("newburn.csv")
+mod_1 <- lm(lwage  ~ exper + tenure + married + south + urban + black + educ, data=newburn)
+summary(mod_1)
+
+```
+
+
+c) Estimate the model including IQ as a proxy, record
+your parameter estimates, standard errors and $R^2$.
+
+```{r q1c, include=TRUE}
+mod_2 <- lm(lwage  ~ exper + tenure + married + south + urban + black + educ + iq, data=newburn)
+summary(mod_2)
+```
+
+d)  What happens to returns to schooling? Does this result
+confirm your suspicion of how ability and schooling are expected
+to be correlated?  
+
+### Yes! What we see is that the coefficient without including IQ is larger than when we include it. It is always so nice to see that this stuff really works!
+
+
+## Part 2: Card (1995)
+
+a) Read the data into R. Plot the series make sure your data are
+read in correctly. 
+
+```{r q1d, include=TRUE}
+card <- read.csv("card.csv")
+print(dfSummary(card))
+```
+b)  Estimate a $\log(wage)$ regression via
+Least Squares with $educ$, $exper$, $exper^2$, $black$, $south$,
+$smsa$, $reg661$ through $reg668$ and $smsa66$ on the right hand
+side. Check your results against Table2, column 5.
+
+```{r q1e, include=TRUE}
+mod_3 <- lm(lwage  ~  educ + exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66 , data=card)
+summary(mod_3)
+```
+
+
+c) Estimate a
+reduced form equation for $educ$ containing all of the explanatory
+variables and the dummy variable $nearc4$. Is the partial
+correlation between $nearc4$ and $educ$ statistically significant?
+
+```{r q1f, include=TRUE}
+mod_4 <- lm(educ  ~  exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66 + nearc4 , data=card)
+summary(mod_4)
+```
+
+d)  Estimate the $\log(wage)$ equation by instrumental
+variables, using $nearc4$ as an instrument for $educ$. Compare the
+95\% confidence interval for the return to education to that
+obtained from the Least Squares regression above. 
+
+```{r q1g, include=TRUE}
+mod_5 <- iv_robust(lwage  ~  educ + exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66| exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66 + nearc4, data = card, se_type ="classical") 
+summary(mod_5)
+```
+
+### The CI is [0.02418;  0.24212], which includes the point estimate from before (0.074).
+
+e) (Bonus) Now use
+multiple instruments. Use $nearc2$ and $nearc4$ as instruments for
+$educ$. Comment on the significance of the partial correlations of
+both instruments in the reduced form. 
+
+```{r q1h, include=TRUE}
+mod_6 <- lm(educ  ~  exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66 + nearc4 + nearc2 , data=card)
+summary(mod_6)
+
+
+mod_7 <- iv_robust(lwage  ~  educ + exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66| exper+ exper^2 + black + south + smsa + reg661 + reg662 + reg663 + reg664 + reg665 + reg666 + reg667 + reg668 + smsa66 + nearc4 + nearc2, data = card, se_type ="classical") 
+summary(mod_7)
+```
+
+
+ 
+
+
