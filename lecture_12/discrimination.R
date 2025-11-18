@@ -11,8 +11,11 @@ tb <- tibble(
 )
 
 lm_1 <- lm(wage ~ female, tb)
+print(lm_1)
 lm_2 <- lm(wage ~ female + occupation, tb)
+print(lm_2)
 lm_3 <- lm(wage ~ female + occupation + ability, tb)
+print(lm_3)
 
 stargazer(lm_1,lm_2,lm_3, type = "text", 
           column.labels = c("Biased Unconditional", 

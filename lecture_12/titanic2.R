@@ -3,9 +3,6 @@ library(magrittr) # for %$% pipes
 library(tidyverse)
 library(haven)
 
-titanic <- read_data("titanic.dta") %>% 
-  mutate(d = case_when(class == 1 ~ 1, TRUE ~ 0))
-
 
 titanic %<>%
   mutate(s = case_when(sex == 0 & age == 1 ~ 1,

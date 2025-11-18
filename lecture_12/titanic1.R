@@ -1,3 +1,5 @@
+rm(list = ls()) # clear memory
+set.seed(22092008)
 library(tidyverse)
 library(haven)
 
