@@ -1,0 +1,55 @@
+---
+title: "Problem Set 5 (Short)"
+author: "MaCCS 201 - Fall 2025"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+rm(list = ls()) # clear memory
+setwd("/Users/auffhammer/Library/CloudStorage/Dropbox/06_Teaching/MACSS/2024/code/private-repository1/Probelm Set 4")
+options(htmltools.dir.version = FALSE)
+library(pacman)
+p_load(foreign,Synth,tidyverse)
+
+```
+## Tentative Due Date: December 15
+### Please submit markdown file named [last_name]_[first_name]_ps4.Rmd or a pdf with all code and answers. 
+
+#  Synthetic Controls
+Let's replicate another OG. Abadie and Gardeazabal (2003). They estimate the effect of terrorist conflict in the Basque Country (Spain) on GDP per capita. You essentially construct a synthetic version of Basque Country. 
+
+
+```{R, load_data2, include = T, cache = T}
+library(SCtools)
+library(Synth)
+data(basque)
+```
+
+We want to replicate the paper. I will save you the digging through the pages. Also, try and do this yourself. This paper has been replicated a thousand time. Use this to learn!!!
+
+1. You want to use the follwing variables as predictors. "`school.illit`", "`school.prim`", "`school.med`", "`school.high`", "`school.post.high`", "`invest`"
+2. You want to use the `mean` as the relevant operator. 
+3. As special predictors you do: special.predictors = list(
+  list("gdpcap", 1960:1969 , "mean"),
+  list("sec.agriculture",
+       seq(1961, 1969, 2), "mean"),
+  list("sec.energy", seq(1961, 1969, 2), "mean"),
+  list("sec.industry", seq(1961, 1969, 2), "mean"),
+  list("sec.construction", seq(1961, 1969, 2), "mean"),
+  list("sec.services.venta", seq(1961, 1969, 2), "mean"),
+  list("sec.services.nonventa", seq(1961, 1969, 2), "mean"),
+  list("popdens", 1969, "mean"))
+4. The dependent vairable is `gdpcap` 
+5. The unit variable is `regionno`
+6. The unit names variable is "`regionname`"
+7. The time variable is "`year`"
+8. The treatment identifier should be obvious. (Basque Country!!!)
+9. As controls indentifiers use `2:16` and `18`. Leave out 1, because that is all of Spain. 
+10. `time.optimize.ssr = 1960:1969`
+11. `time.plot = 1955:1997`
+12. As method use method = "BFGS"
+13. Generate a nice looking plot of the gap between the synthetic control and Basque Country GDP. 
+14. Create a falsification plot, using all other areas from 9. above as fake units.
+15. Optional. Repeat 14, but fake move treatment up a bit. 
